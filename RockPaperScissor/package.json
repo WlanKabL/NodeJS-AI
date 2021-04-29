@@ -1,8 +1,8 @@
 {
-  "name": "autoupdater",
+  "name": "RPS AU",
   "version": "1.1.1",
-  "description": "Auto Updating website from Github",
-  "main": "UpdateWebsite.js",
+  "description": "Play Rock-Paper-Scissor against AI",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
