@@ -48,10 +48,8 @@ ResultOfGame = () => {
 }
 
 StartGame = (PlayerChoose) => {
-    while (gameAwnser = ResultOfGame()) {
-        SaveGame("Schere", "Schere", gameAwnser)
-    }
-    
+    while (gameAwnser = ResultOfGame());
+    SaveGame("Schere", "Schere", gameAwnser)
 }
 
 StartUp = () => {
