@@ -25,12 +25,6 @@ const properties = [
         warning: 'Field must be a empty field between <A1-C3>'
     }
 ];
-
-/* const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
 async function lineInput(query) {
     const rl = await readline.createInterface({
         input: process.stdin,
@@ -41,7 +35,7 @@ async function lineInput(query) {
         rl.close();
         resolve(ans);
     }))
-} */
+}
 
 CommandLOutput = (S) => {
     var TheReturn = "";
@@ -87,22 +81,32 @@ CommandLOutput = (S) => {
 }
 
 CheckFieldAwailable = (FieldName) => {
-    
+    var AllFields = Moves.split(";");
+    var isAvailable = false;
+    for (var x = 0; x <= 8; x++) {
+        if (AllFields[x] == (FieldName.toUpperCase() + "/")) {
+            isAvailable = true;
+        }
+    }
+    return isAvailable;
 }
 
 async function Place(PlayerTeam, AITeam) {
     if (PlayerTeam == OnTheMove) {
-        prompt.get(properties , function (err, result) {
+        /* await prompt.get(properties , function (err, result) {
             if (err) { return onErr(err); }
             console.log('Command-line input received:');
             console.log('  Username: ' + result.field);
-        });
+        }); */
+        lineInput("Enter the field u want to set... ").then(FieldChoosen => {
+            console.log(CheckFieldAwailable(FieldChoosen))
+        })
         OnTheMove = AITeam;
     } else {
         console.log("AI chooses: " + "a1")
         OnTheMove = PlayerTeam;
     }
-    return "a"
+    return
 }
 
 StartGame = (PlayerTeam, AITeam) => {
@@ -115,7 +119,7 @@ StartGame = (PlayerTeam, AITeam) => {
     console.log(CommandLOutput(Moves))
     
     Place(PlayerTeam, AITeam).then(Res => {
-        console.log(Res)
+        console.log("abc")
     })
 }
 
