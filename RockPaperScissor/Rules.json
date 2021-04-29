@@ -1,0 +1,7 @@
+[
+    {
+        "rock" : "paper",
+        "paper" : "scissor",
+        "scissor": "rock"
+    }
+]
