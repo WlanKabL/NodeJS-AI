@@ -64,7 +64,7 @@ StartUp = () => {
         console.log("ERROR: Please enter a move as start parameter")
         return;
     }
-    console.log(YourChoise)
+    console.table(YourChoise)
     var WordFound = false;
     PossibleMoves.forEach(oneMove => {
         if (!WordFound) {
