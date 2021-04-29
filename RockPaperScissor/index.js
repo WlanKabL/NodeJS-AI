@@ -8,7 +8,7 @@ const PossibleMoves = ["rock", "paper", "scissor"];
 const PossibleInputs = PossibleMoves;
 
 const RulesPath = __dirname + "/Rules.json";
-var AutoLearn = true;
+var AutoLearn = false;//Stop the AI ask you if the game was a win or a loose
 
 async function askQuestion(query) {
     const rl = await readline.createInterface({
