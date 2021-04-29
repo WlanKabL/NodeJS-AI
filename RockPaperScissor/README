@@ -1,0 +1,14 @@
+###R-P-S AI###
+How to start:
+node . <Rock/Paper/Scissor/Auto>
+
+-----Modes:-----
+#<Rock/Paper/Scissor>
+If you choose between the 3 options scissors, stone or paper, the AI will ask you whether you have won or lost.
+-The AI can learn itself by setting the BOOL 'var AutoLearn = true'.
+
+#<Auto>
+The AI goes through the game 1000 times and then you can play against the smartest AI in the world.
+
+Only rock-paper-scissors but that's a start.
+
