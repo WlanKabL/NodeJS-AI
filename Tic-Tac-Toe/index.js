@@ -5,27 +5,13 @@ const prompt = require('prompt');
 const AImove = require('./AImove');
 const { exit } = require('process');
 const GamePath = __dirname + '/results/games.json';
+const RulesPath = __dirname + "/Rules.json";
 
 const Teams = ["X", "O"];
 var OnTheMove = "X";
 var win = false;
 var Moves = "A1/;A2/;A3/;B1/;B2/;B3/;C1/;C2/;C3/";
 
-function onErr(err) {
-    console.log(err);
-    return 1;
-}
-
-const properties = [
-    {
-        
-        description: "Field you want to set",
-        message: "Field you want to set",
-        name: 'field',
-        validator: /^[a-zA-Z0-9\s\-]+$/,
-        warning: 'Field must be a empty field between <A1-C3>'
-    }
-];
 async function lineInput(query) {
     const rl = await readline.createInterface({
         input: process.stdin,
@@ -54,7 +40,7 @@ CommandLOutput = (S) => {
             if (x == 0) {
                 TheReturn += DefaultLineBase + "A";
             }
-            TheReturn += "[ " + TheMoves[x].substr(2,1) + " ] ";
+            TheReturn += "[ " + TheMoves[x].substr(2, 1) + " ] ";
             if (x == 2) {
                 TheReturn += "|\n"
             }
@@ -62,7 +48,7 @@ CommandLOutput = (S) => {
             if (x == 3) {
                 TheReturn += DefaultLineBase + "B";
             }
-            TheReturn += "[ " + TheMoves[x].substr(2,1) + " ] ";
+            TheReturn += "[ " + TheMoves[x].substr(2, 1) + " ] ";
 
             if (x == 5) {
                 TheReturn += "|\n"
@@ -71,7 +57,7 @@ CommandLOutput = (S) => {
             if (x == 6) {
                 TheReturn += DefaultLineBase + "C";
             }
-            TheReturn += "[ " + TheMoves[x].substr(2,1) + " ] ";
+            TheReturn += "[ " + TheMoves[x].substr(2, 1) + " ] ";
             if (x == 8) {
                 TheReturn += "|\n"
             }
@@ -81,7 +67,7 @@ CommandLOutput = (S) => {
     return TheReturn;
 }
 
-CheckFieldAwailable = (FieldName) => {
+CheckFieldAvailable = (FieldName) => {
     var AllFields = Moves.split(";");
     var isAvailable = "0";
     for (var x = 0; x <= 8; x++) {
@@ -94,22 +80,65 @@ CheckFieldAwailable = (FieldName) => {
 
 PlaceField = (FieldName, Team) => {
     var TheField = FieldName.toUpperCase();
-    if (CheckFieldAwailable(TheField) == "1") {
+    if (CheckFieldAvailable(TheField) == "1") {
         Moves = Moves.replace(TheField + "/", TheField + Team)
         console.log(CommandLOutput(Moves))
     }
 }
 
 CheckWin = (S) => {
+    
+    var AllFields = [];
+    var MovesArr = [];
+    var TheMoves = S.split(";")
+    for (var x = 0; x <= 8; x++) {
+        MovesArr.push(TheMoves[x])
+        AllFields.push(TheMoves[x].substr(0, 2))
+    }
+
+
+
+    var Rules = JSON.parse(fs.readFileSync(RulesPath, "utf-8"));
+    var objectKeysArray = Object.keys(Rules)
+    for(var x = 0; x <= 1; x++) {
+        var TeamToCheck = "";
+        if (x == 0) {  
+            TeamToCheck = "X";
+        } else {
+            TeamToCheck = "O";
+        }
+        objectKeysArray.forEach(function (objKey) {
+            var OnThreeWin = 0;
+            var objValue = Rules[objKey]
+            objValue.forEach(WinFields => {
+                MovesArr.forEach(Field => {
+                    //console.log("Field: " + Field + " and idk: " + WinFields + TeamToCheck)
+                    if (Field == (WinFields + TeamToCheck)) {
+                        OnThreeWin++;
+                    }
+                })
+            });
+            if (OnThreeWin == 3) {
+                console.log(" ------------------------------")
+                console.log("|Win detected. '" + TeamToCheck + "' won the game|")
+                console.log(" ------------------------------")
+                exit(0);
+                return ["1", TeamToCheck];
+            }
+            
+        })
+    }
+    
+    ///console.table(MovesArr)
     return ["0", "/"];
 }
 
 async function Place(PlayerTeam, AITeam) {
-    
+
     if (CheckWin(Moves)[0] == "0") {
         if (PlayerTeam == OnTheMove) {
             lineInput("Enter the field u want to set... ").then(FieldChoosen => {
-                if (CheckFieldAwailable(FieldChoosen) == "1") {
+                if (CheckFieldAvailable(FieldChoosen) == "1") {
                     //console.log(FieldChoosen + " F")
                     PlaceField(FieldChoosen, PlayerTeam);
                     OnTheMove = AITeam;
@@ -119,17 +148,19 @@ async function Place(PlayerTeam, AITeam) {
                     Place(PlayerTeam, AITeam)
                 }
             })
-            
+
         } else {
-            console.log("AI chooses: " + "a1")
-            OnTheMove = PlayerTeam;
-            Place(PlayerTeam, AITeam)
+            AImove.PickField(Moves).then(AIchoose => {
+                console.log("AI chooses: " + "a1")
+                OnTheMove = PlayerTeam;
+                Place(PlayerTeam, AITeam)
+            })
         }
         return
     } else {
         console.log("Win detected. '" + CheckWin(Moves)[1] + "' won the game")
     }
-    
+
 }
 
 StartGame = (PlayerTeam, AITeam) => {
@@ -140,8 +171,8 @@ StartGame = (PlayerTeam, AITeam) => {
     console.log("| C[ / ] [ / ] [ / ] |")
     console.log(" --------------------") */
     console.log(CommandLOutput(Moves))
-    
-    Place(PlayerTeam, AITeam).then(Res => {})
+
+    Place(PlayerTeam, AITeam).then(Res => { })
 }
 
 StartUp = () => {
