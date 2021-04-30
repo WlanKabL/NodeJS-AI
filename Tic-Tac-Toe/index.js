@@ -3,6 +3,7 @@ var levenshtein = require('fast-levenshtein');
 const readline = require('readline');
 const prompt = require('prompt');
 const AImove = require('./AImove');
+const { exit } = require('process');
 const GamePath = __dirname + '/results/games.json';
 
 const Teams = ["X", "O"];
@@ -82,31 +83,53 @@ CommandLOutput = (S) => {
 
 CheckFieldAwailable = (FieldName) => {
     var AllFields = Moves.split(";");
-    var isAvailable = false;
+    var isAvailable = "0";
     for (var x = 0; x <= 8; x++) {
         if (AllFields[x] == (FieldName.toUpperCase() + "/")) {
-            isAvailable = true;
+            isAvailable = "1";
         }
     }
     return isAvailable;
 }
 
-async function Place(PlayerTeam, AITeam) {
-    if (PlayerTeam == OnTheMove) {
-        /* await prompt.get(properties , function (err, result) {
-            if (err) { return onErr(err); }
-            console.log('Command-line input received:');
-            console.log('  Username: ' + result.field);
-        }); */
-        lineInput("Enter the field u want to set... ").then(FieldChoosen => {
-            console.log(CheckFieldAwailable(FieldChoosen))
-        })
-        OnTheMove = AITeam;
-    } else {
-        console.log("AI chooses: " + "a1")
-        OnTheMove = PlayerTeam;
+PlaceField = (FieldName, Team) => {
+    var TheField = FieldName.toUpperCase();
+    if (CheckFieldAwailable(TheField) == "1") {
+        Moves = Moves.replace(TheField + "/", TheField + Team)
+        console.log(CommandLOutput(Moves))
     }
-    return
+}
+
+CheckWin = (S) => {
+    return ["0", "/"];
+}
+
+async function Place(PlayerTeam, AITeam) {
+    
+    if (CheckWin(Moves)[0] == "0") {
+        if (PlayerTeam == OnTheMove) {
+            lineInput("Enter the field u want to set... ").then(FieldChoosen => {
+                if (CheckFieldAwailable(FieldChoosen) == "1") {
+                    //console.log(FieldChoosen + " F")
+                    PlaceField(FieldChoosen, PlayerTeam);
+                    OnTheMove = AITeam;
+                    Place(PlayerTeam, AITeam)
+                } else {
+                    console.log(FieldChoosen + " is not avilable!")
+                    Place(PlayerTeam, AITeam)
+                }
+            })
+            
+        } else {
+            console.log("AI chooses: " + "a1")
+            OnTheMove = PlayerTeam;
+            Place(PlayerTeam, AITeam)
+        }
+        return
+    } else {
+        console.log("Win detected. '" + CheckWin(Moves)[1] + "' won the game")
+    }
+    
 }
 
 StartGame = (PlayerTeam, AITeam) => {
@@ -118,16 +141,14 @@ StartGame = (PlayerTeam, AITeam) => {
     console.log(" --------------------") */
     console.log(CommandLOutput(Moves))
     
-    Place(PlayerTeam, AITeam).then(Res => {
-        console.log("abc")
-    })
+    Place(PlayerTeam, AITeam).then(Res => {})
 }
 
 StartUp = () => {
     var YourTeam = process.argv.slice(2);
     if (YourTeam == undefined || YourTeam.length < 1) {
         console.log("ERROR: Please enter <X/O> as startparameter");
-        return;
+        exit(0);
     }
     YourTeam = YourTeam.toString().toUpperCase();
     console.log("Welcome to Tic-Tac-Toe against the AI of WlanKabl.");
@@ -139,6 +160,7 @@ StartUp = () => {
         StartGame(YourTeam, "X")
     } else {
         console.log("ERROR: Please enter a valid Team!")
+        exit(0);
     }
 }
 
