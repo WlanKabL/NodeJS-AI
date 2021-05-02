@@ -1,13 +1,1 @@
-[
-    {
-        "move0": "A1/;A2/;A3/;B1/;B2/;B3/;C1/;C2/;C3/",
-        "move1": "A1X;A2/;A3/;B1/;B2/;B3/;C1/;C2/;C3/",
-        "move2": "A1X;A2O;A3/;B1/;B2/;B3/;C1/;C2/;C3/",
-        "move3": "A1X;A2O;A3X;B1/;B2/;B3/;C1/;C2/;C3/",
-        "move4": "A1X;A2O;A3X;B1O;B2/;B3/;C1/;C2/;C3/",
-        "move5": "A1X;A2O;A3X;B1O;B2X;B3/;C1/;C2/;C3/",
-        "move6": "A1X;A2O;A3X;B1O;B2X;B3/;C1O;C2/;C3/",
-        "move7": "A1X;A2O;A3X;B1O;B2X;B3/;C1O;C2/;C3X",
-        "winner" : "X"
-    }
-]
+[]
