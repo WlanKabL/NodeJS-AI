@@ -131,8 +131,6 @@ module.exports.PickField = async (MovesS, AIteam, Movecounter) => {
                 MovesDontWork.push(Agame);
             }
         }
-
-
     })
 
     if (GoodMovesToMake.length != 0) {
