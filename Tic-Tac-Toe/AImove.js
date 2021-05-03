@@ -67,7 +67,7 @@ DetectWinToCancel = (MovesS, AIteam) => {
             });
             if (OnThreeWin == 2) {
                 if (AvailableFields.includes(FieldsToWin[0]) && TeamToCheck != AIteam) {
-                    //console.log("Player is near the win with field: " + FieldsToWin[0])
+                    console.log("Player is near the win with field: " + FieldsToWin[0])
                     ReturnValue = FieldsToWin[0];
                 }
             }
